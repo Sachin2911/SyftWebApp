@@ -1,0 +1,7 @@
+,id,name,code,quantity_on_hand,purchase_unit_price,sale_unit_price
+0,fd4873eb-1b87-4bc5-ba82-de91a556b70b,Frozen cupcakes,FR001,619,1,45
+1,8d4fc345-c882-4bb1-b0ea-017fccdedd66,Cinderella Cupcakes,CIN001,0,1,15
+2,1355f97e-5572-408d-bb82-fdf9f72b370c,Tinkerbel cake,TIN001,14,15,125
+3,817308ce-21e8-4a6c-a2e3-b13100823845,Zoo Chocolates,CHO001,7,150,200
+4,8e20b962-6390-425f-9ae8-7d28d54d4c09,Ariel Cupcakes,ARI001,475,3,50
+5,295f1964-2b0a-42f4-ad24-aad148482afa,Jasmine Cake,JAS001,100,10,0
