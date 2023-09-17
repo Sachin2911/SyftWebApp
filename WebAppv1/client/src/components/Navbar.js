@@ -1,38 +1,59 @@
-import { Link } from 'react-router-dom'
-import { useLogout } from '../hooks/useLogOut'
-import { useAuthContext } from '../hooks/useAuthContext'
-
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useLogout } from '../hooks/useLogOut';
+import { useAuthContext } from '../hooks/useAuthContext';
+import './Navbar.css';
 const Navbar = () => {
-  const {logout}  = useLogout()
-  const { user } = useAuthContext()
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { logout } = useLogout();
+  const { user } = useAuthContext();
 
-  const handleClick = ()=>{
-    logout()
-  }
+  const handleClick = () => {
+    logout();
+  };
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   return (
     <header>
       <div className="container">
+      <button onClick={toggleSidebar} className="toggle-button">
+            ☰
+          </button>
         <Link to="/">
           <h1>Jodi's CupCakes 🧁</h1>
         </Link>
         <nav>
           {user && (
             <div>
-            <span>{user && user.email}</span>
-            <button onClick={handleClick}>Log out</button>
+              <span>{user && user.email}</span>
+              <button onClick={handleClick}>Log out</button>
             </div>
-          )} 
+          )}
           {!user && (
             <div>
-            <Link to="/login">Login</Link>
-            <Link to="/signup">Signup</Link>
-          </div>
-          )} 
+              <Link to="/login">Login</Link>
+              <Link to="/signup">Signup</Link>
+            </div>
+          )}
           
         </nav>
       </div>
-    </header>
-  )
-}
 
-export default Navbar
+      <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+          <div className='nav_routes'>
+          <h3><Link to="/">Home</Link></h3>
+          <h3><Link to="/inventory">Inventory</Link></h3>
+          <h3><Link to="/invoices">Invoices</Link></h3>
+          <h3><Link to="/payments">Payments</Link></h3>
+          <h3><Link to="/settings">Settings</Link></h3>
+          </div>
+      </div>
+
+    </header>
+  );
+};
+
+export default Navbar;
