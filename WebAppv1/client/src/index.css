@@ -7,7 +7,7 @@
   --error: #e7195a;
 }
 body {
-  background: #f1f1f1;
+  background: #f6f4f4;
   margin: 0;
   font-family: "Poppins";
 }
@@ -15,21 +15,17 @@ header {
   background: #fff;
 }
 header .container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 10px 20px;
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 header a {
   color: #333;
   text-decoration: none;
 }
 .pages{
-  max-width: 1400px;
-  padding: 20px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 /* homepage */
@@ -37,34 +33,6 @@ header a {
   display: grid;
   grid-template-columns: 3fr 1fr;
   gap: 100px;
-}
-.workout-details {
-  background: #fff;
-  border-radius: 4px;
-  margin: 20px auto;
-  padding: 20px;
-  position: relative;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
-}
-.workout-details h4 {
-  margin: 0 0 10px 0;
-  font-size: 1.2em;
-  color: var(--primary);
-}
-.workout-details p {
-  margin: 0;
-  font-size: 0.9em;
-  color: #555;
-}
-.workout-details span {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  cursor: pointer;
-  background: #f1f1f1;
-  padding: 6px;
-  border-radius: 50%;
-  color: #333;
 }
 
 /* new workout form */
@@ -91,7 +59,7 @@ form button {
 }
 div.error {
   padding: 10px;
-  background: #ffefef;
+  background: #eee7e7;
   border: 1px solid var(--error);
   color: var(--error);
   border-radius: 4px;
@@ -128,4 +96,10 @@ form.signup, form.login {
   padding: 20px;
   background: #fff;
   border-radius: 4px;
+}
+
+.dashboardContainer{
+  width: 98%;
+  height: 95%;
+  margin: 30px auto;
 }
