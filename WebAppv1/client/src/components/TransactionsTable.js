@@ -9,7 +9,7 @@ function RecentTransactions({ transactions }) {
   const recentTransactions = sortedTransactions.slice(0, 10);
 
   return (
-    <TableContainer style={{ maxHeight: 250, overflow: 'auto' }}>
+    <TableContainer style={{ maxHeight: 350, overflow: 'auto' }}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
