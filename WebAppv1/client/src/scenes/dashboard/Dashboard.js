@@ -2,7 +2,6 @@ import {Box, useMediaQuery} from "@mui/material"
 
 import Row1 from "./Row1"
 import Row2 from "./Row2"
-import Row3 from "./Row3"
 
 const gridTemplateLargeScreen = `
     "a b c"
@@ -11,10 +10,6 @@ const gridTemplateLargeScreen = `
     "a b f"
     "d e f"
     "d e f"
-    "d h i"
-    "g h i"
-    "g h j"
-    "g h j"
 `
 const gridTemplateSmallScreen = `
     "a"
@@ -36,17 +31,6 @@ const gridTemplateSmallScreen = `
     "f"
     "f"
     "f"
-    "g"
-    "g"
-    "g"
-    "h"
-    "h"
-    "h"
-    "h"
-    "i"
-    "i"
-    "j"
-    "j"
 `
 
 const Dashboard = () => {
@@ -54,9 +38,9 @@ const Dashboard = () => {
   return (
     <Box width="100%" height="100%" display="grid" gap="1.5rem" bgcolor="f1f1f1"
     sx={
-        isAboveMediumScreens ?{
+        isAboveMediumScreens ?{     
         gridTemplateColumns: "repeat(3, minmax(370px, 1fr))",
-        gridTemplateRows: "repeat(10, minmax(60px, 1fr))",
+        gridTemplateRows: "repeat(6, minmax(60px, 1fr))",
         gridTemplateAreas: gridTemplateLargeScreen,
     }:{
         gridAutoColumns: "1fr",
@@ -66,7 +50,6 @@ const Dashboard = () => {
  
         <Row1/>
         <Row2/> 
-        <Row3/>
     </Box>
   )
 }
