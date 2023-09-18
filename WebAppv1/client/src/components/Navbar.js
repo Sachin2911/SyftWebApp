@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { useLogout } from '../hooks/useLogOut';
 import { useAuthContext } from '../hooks/useAuthContext';
 import './Navbar.css';
+import Sidebar from './Sidebar';
+
+
 const Navbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { logout } = useLogout();
@@ -19,9 +22,7 @@ const Navbar = () => {
   return (
     <header>
       <div className="container">
-      <button onClick={toggleSidebar} className="toggle-button">
-            ☰
-          </button>
+      <Sidebar/>
         <Link to="/">
           <h1>Jodi's CupCakes 🧁</h1>
         </Link>
