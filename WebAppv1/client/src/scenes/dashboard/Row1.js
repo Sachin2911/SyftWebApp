@@ -1,27 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import DashboardBox from '../../components/DashboardBox';
 import BoxHeader from '../../components/BoxHeader';
 import { useAuthContext } from '../../hooks/useAuthContext';
 import { useGetData } from "../../hooks/useGetData";
 import { useAggregateData } from "../../hooks/useAggregateData";
 import { useFilterData } from "../../hooks/useFilterData";  
-import { AreaChart, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Bar, CartesianGrid, BarChart, AreaChart, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const Row1 = () => {
   const { user } = useAuthContext();
-  const data = useGetData("payment", user);
+  const dataPayment = useGetData("payment", user);
+  const dataItem = useGetData("item", user);
   
-  const revenueData = useFilterData(data, 'is_income', true);
-  const expenseData = useFilterData(data, 'is_income', false);
+  const revenueData = useFilterData(dataPayment, 'is_income', true);
+  const expenseData = useFilterData(dataPayment, 'is_income', false);
 
   const revenueChartData = useAggregateData(revenueData);
   const expenseChartData = useAggregateData(expenseData);
 
+  useEffect(() => {
+    if (dataItem !== null) { // or if (data1)
+      console.log(dataItem);
+    }
+  }, [dataItem]);
+  
   return (
     <>
       <DashboardBox gridArea="a">
         <BoxHeader title="Revenue and Expenses" sideText="+4%" />
-        { data && (
+        { dataPayment && (
           <ResponsiveContainer className="graphBox" width="95%" height="85%">
           <AreaChart
         data={revenueChartData}
@@ -55,16 +62,46 @@ const Row1 = () => {
       </DashboardBox>
       
       <DashboardBox gridArea="b">
-    <BoxHeader title="Profit and Revenue"
-      subtitle="top line represents profit, bottom line represents revenue"
+    <BoxHeader title="Inventory Overview"
+      subtitle="Items currently available in inventory"
       sideText="+4%"></BoxHeader>
+      {dataPayment && (
+        <ResponsiveContainer width="100%" height="80%">
+        <BarChart
+          width={500}
+          height={300}
+          data={dataItem}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 10,
+            bottom: 5,
+          }}
+        >
+        <defs>
+    <linearGradient id="colorInventory" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="5%" stopColor="#8884d8" stopOpacity={1} />
+      <stop offset="20%" stopColor="#8884d8" stopOpacity={1} />
+      <stop offset="40%" stopColor="#8884d8" stopOpacity={0.9} />
+      <stop offset="95%" stopColor="#8884d8" stopOpacity={0.2} />
+    </linearGradient>
+    </defs>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" style={{ fontSize: "16px" }} />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="quantity_on_hand" fill="url(#colorInventory)" />
+        </BarChart>
+      </ResponsiveContainer>
+      )}
     </DashboardBox>
 
 
     <DashboardBox gridArea="c">
-    <BoxHeader title="Revenue Month By Month"
+    <BoxHeader title="Profit Per Item"
       subtitle="graph representing the revenue month by month"
-      sideText="+4%"></BoxHeader>
+      sideText="+3%"></BoxHeader>
     </DashboardBox>
 
     </>

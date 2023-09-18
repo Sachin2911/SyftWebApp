@@ -103,3 +103,14 @@ form.signup, form.login {
   height: 95%;
   margin: 30px auto;
 }
+
+.movements{
+  display: flex;
+  flex-direction: row;
+}
+
+.movement-nums{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
