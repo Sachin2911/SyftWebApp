@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/sachin/Desktop/SyftWebApp/ChatBot/cupCakeBot/botData/model.tflearn"
+all_model_checkpoint_paths: "/home/sachin/Desktop/SyftWebApp/ChatBot/cupCakeBot/botData/model.tflearn"
