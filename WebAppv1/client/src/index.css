@@ -114,3 +114,9 @@ form.signup, form.login {
   flex-direction: column;
   justify-content: center;
 }
+
+.currency-block{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}

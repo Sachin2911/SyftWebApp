@@ -1,5 +1,11 @@
-import FlexBetween from './FlexBetween'
 import {Box, Typography} from "@mui/material"
+import { styled } from "@mui/system"
+
+const FlexBetween = styled(Box)({
+    display:"flex",
+    justifyContent:"space-between",
+    alignItems:"center"
+})
 
 const BoxHeader = ({icon, title, subtitle, sideText}) => {
   return (
@@ -22,4 +28,10 @@ const BoxHeader = ({icon, title, subtitle, sideText}) => {
   )
 }
 
-export default BoxHeader
+const DashboardBox = styled(Box)(() =>({
+    backgroundColor: "#fff",
+    borderRadius: "1rem",
+    boxShadow: "0.15rem 0.2rem 0.15rem 0.1rem rgba(0, 0, 0, 0.1)"
+}))
+
+export {BoxHeader, DashboardBox, FlexBetween}

@@ -51,3 +51,48 @@ export const useAggregateData = (data) => {
     return chartData;
   };
   
+  export const useFilterData = (data, key, value) => {
+    const [filteredData, setFilteredData] = useState(null);
+  
+    useEffect(() => {
+      if (data) {
+        const result = data.filter(item => item[key] === value);
+        setFilteredData(result);
+      }
+    }, [data, key, value]);
+  
+    return filteredData;
+  };
+
+  export const useSumData = (data) => {
+    const [sumData, setSumData] = useState(0);
+  
+    useEffect(() => {
+      if (data) {
+        let total = 0;
+        data.forEach((item) => {
+          total += (item["total"]);
+        });
+        setSumData(total);
+      }
+    }, [data]);
+  
+    return sumData;
+  };
+
+  export const useTurnOver = (data) => {
+    const [sumData, setSumData] = useState(0);
+  
+    useEffect(() => {
+      if (data) {
+        let total = 0;
+        data.forEach((item) => {
+          total += (item["sale_unit_price"] * item["quantity_on_hand"]);
+        });
+        setSumData(total);
+      }
+    }, [data]);
+  
+    return sumData;
+  };
+  
