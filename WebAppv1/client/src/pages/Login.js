@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useLoginIn } from "../hooks/useLogin"
+import { FlexBetween } from "../components/ChartElements"
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -12,6 +13,7 @@ const Login = () => {
   }
 
   return (
+    <div>
     <form className="login" onSubmit={handleSubmit}>
       <h3>Log In</h3>
       
@@ -27,10 +29,12 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)} 
         value={password} 
       />
-
+      <br></br>
       <button disabled={isLoading}>Log in</button>
       {error && <div className="error">{error}</div>}
     </form>
+    <div style={{height:"41vh"}}></div>
+    </div>
   )
 }
 

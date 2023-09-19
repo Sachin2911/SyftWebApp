@@ -3,7 +3,7 @@ const jwt =  require("jsonwebtoken")
 
 const createToken = (_id)=>{
     // Pass in the MongoUserID and set the expiration to one day
-    return jwt.sign({_id}, process.env.SECRET, {expiresIn: "1d"})
+    return jwt.sign({_id}, process.env.SECRET, {expiresIn: "5d"})
 }
 
 // login user

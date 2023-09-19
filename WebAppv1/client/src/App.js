@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthContext } from './hooks/useAuthContext'
+import 'bootstrap/dist/css/bootstrap.min.css';
 // pages & components
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -10,10 +11,10 @@ function App() {
   const { user } = useAuthContext()
 
   return (
-    <div className="App">
+    <div className="App" style={{backgroundColor:"#F1F1F1"}}>
       <BrowserRouter>
         <Navbar />
-        <div className="pages">
+        <div className="pages" >
           <Routes>
             <Route 
               path="/"

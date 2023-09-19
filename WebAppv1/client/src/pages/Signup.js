@@ -13,6 +13,7 @@ const Signup = () => {
   }
 
   return (
+    <div>
     <form className="signup" onSubmit={handleSubmit}>
       <h3>Sign Up</h3>
       
@@ -28,10 +29,12 @@ const Signup = () => {
         onChange={(e) => setPassword(e.target.value)} 
         value={password} 
       />
-
+      <br></br>
       <button disabled={isLoading}>Sign up</button>
       {error && <div className="error">{error}</div>}
     </form>
+    <div style={{height:"41vh"}}></div>
+    </div>
   )
 }
 
