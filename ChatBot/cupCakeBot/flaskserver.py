@@ -13,6 +13,13 @@ from nltk.stem import WordNetLemmatizer, PorterStemmer
 from collections import Counter
 import re
 import openai
+from datetime import datetime
+import pytz
+from statsmodels.tsa.arima.model import ARIMA
+from sklearn.preprocessing import MinMaxScaler
+from keras.models import Sequential
+from keras.layers import Dense, LSTM
+import numpy as np
 
 # Initialize the WordNetLemmatizer and PorterStemmer
 wnl = WordNetLemmatizer()
@@ -44,6 +51,47 @@ net = tflearn.regression(net)
 
 model = tflearn.DNN(net)
 model.load("./botData/model.tflearn")
+
+def LSTM_forecast(time_series_data):
+    # Normalize the data
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    time_series_data_scaled = scaler.fit_transform(np.array(time_series_data).reshape(-1, 1))
+
+    # Converting time series data to supervised learning problem
+    def create_dataset(dataset, look_back=1):
+        dataX, dataY = [], []
+        for i in range(len(dataset) - look_back - 1):
+            a = dataset[i:(i + look_back), 0]
+            dataX.append(a)
+            dataY.append(dataset[i + look_back, 0])
+        return np.array(dataX), np.array(dataY)
+
+    # Preparing the dataset with a look_back period of 1 month
+    look_back = 1
+    X, y = create_dataset(time_series_data_scaled, look_back)
+
+    # Reshaping the input to be [samples, time steps, features]
+    X = np.reshape(X, (X.shape[0], 1, X.shape[1]))
+
+    # Build the LSTM model
+    model = Sequential()
+    model.add(LSTM(4, input_shape=(1, look_back)))
+    model.add(Dense(1))
+    model.compile(loss='mean_squared_error', optimizer='adam')
+
+    model.fit(X, y, epochs=100, batch_size=1, verbose=1)
+    forecast = model.predict(np.array([[time_series_data_scaled[-1]]]).reshape(1, 1, 1))
+    # Inverse transform the forecasted value to get it back to the original scale
+    forecast = scaler.inverse_transform(forecast)
+
+    return forecast[0][0]
+
+def timeGetter(timestamp_milliseconds):
+    timestamp_seconds = int(timestamp_milliseconds) / 1000.0
+    dt_object = datetime.utcfromtimestamp(timestamp_seconds)
+    dt_object = dt_object.replace(tzinfo=pytz.UTC)
+    dt_string = dt_object.isoformat()
+    return dt_string
 
 def bag_of_words(s: str, words: list) -> np.array:
     bag = np.zeros(len(words), dtype=np.float32)
@@ -146,6 +194,49 @@ def cupcakebotquery():
     result_limited = result.head(20)
     print(conditions_res)
     return jsonify({"response": result_limited.to_json()})
+
+
+
+@app.route('/api/model', methods=['POST'])
+def financeQuery():
+    user_input = request.json.get('user_input', '')
+    query_destruct = user_input.split(",")
+    query_destruct[2] = timeGetter(query_destruct[2])
+    query_destruct[3] = timeGetter(query_destruct[3])
+    
+    #filtering after startdate
+    filtered_df = merged2[merged2["issue_date"]>=query_destruct[2]]
+    #filtering before enddate
+    filtered_df = filtered_df[merged2["issue_date"]<=query_destruct[3]]
+    filtered_df = filtered_df[merged2["item_code"]==query_destruct[1]]
+    #get the column 
+    print(filtered_df.columns)
+    result_df = filtered_df[["issue_date", query_destruct[0]]].sort_values(by='issue_date', ascending=True)
+    result_df = result_df.reset_index()
+    output = result_df.to_json()
+    return jsonify({"response": output})
+
+@app.route('/api/predict', methods=['POST'])
+def predictor():
+    user_input = request.json.get('user_input', '')
+    df = pd.DataFrame(user_input)
+    df['issue_date'] = pd.to_datetime(df['issue_date'])
+    time_series = df.resample('M', on='issue_date').sum()['value']
+    
+
+    model_value = ARIMA(time_series, order=(5, 1, 0))
+    model_fit_value = model_value.fit()
+
+    forecast_sales_ARIMA = model_fit_value.forecast(steps=1)
+    forcast_LSTM = LSTM_forecast(time_series)
+    print(forcast_LSTM)
+    output = {
+    "arima": forecast_sales_ARIMA.tolist(),
+    "lstm": forcast_LSTM.tolist()  # assuming forcast_LSTM is also a Series
+    }
+
+    return jsonify(output)
+    
 
 @app.route('/api/cupcakebot/analytics', methods=['POST'])
 def cupcakebotanalytics():
