@@ -36,7 +36,7 @@ const SidebarNav = styled.nav`
   position: fixed;
   top: 0;
   left: ${({ sidebar }) => (sidebar ? '0' : '-100%')};
-  transition: left 0.8s ease-in-out; /* Add a smooth transition effect */
+  transition: left 0.4s ease-in-out;
   z-index: 10;
 `;
 
