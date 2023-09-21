@@ -1,11 +1,49 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
-import { SidebarData } from './SidebarData';
-import SubMenu from './SubMenu';
+import * as IoIcons from 'react-icons/io';
+import * as RiIcons from 'react-icons/ri';
 import { IconContext } from 'react-icons/lib';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+const SidebarLink = styled(Link)`
+  display: flex;
+  color: #e1e9fc;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  list-style: none;
+  height: 60px;
+  text-decoration: none;
+  font-size: 18px;
+
+  &:hover {
+    background: #252831;
+    border-left: 4px solid #632ce4;
+    cursor: pointer;
+  }
+`;
+
+const SidebarLabel = styled.span`
+  margin-left: 16px;
+`;
+
+const DropdownLink = styled(Link)`
+  background: #414757;
+  height: 60px;
+  padding-left: 3rem;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #f5f5f5;
+  font-size: 18px;
+
+  &:hover {
+    background: #632ce4;
+    cursor: pointer;
+  }
+`;
 
 const Nav = styled.div`
   background: #15171c;
@@ -46,8 +84,36 @@ const SidebarWrap = styled.div`
 
 const Sidebar = () => {
   const [sidebar, setSidebar] = useState(false);
-
+  const [subnav, setSubnav] = useState(false);
+  const showSubnav = () => setSubnav(!subnav);
   const showSidebar = () => setSidebar(!sidebar);
+
+  const hardcodedSidebarData = [
+    {
+      title: 'Dashboard',
+      path: '/',
+      icon: <AiIcons.AiFillHome />,
+      iconClosed: <RiIcons.RiArrowDownSFill />,
+      iconOpened: <RiIcons.RiArrowUpSFill />,
+    },
+    {
+      title: 'Analytics and KPIs',
+      path: '/kpi',
+      icon: <IoIcons.IoIosPaper />,
+      iconClosed: <RiIcons.RiArrowDownSFill />,
+      iconOpened: <RiIcons.RiArrowUpSFill />,
+    },
+    {
+      title: 'Inventory',
+      path: '/inventory',
+      icon: <FaIcons.FaCartPlus />
+    },
+    {
+      title: 'Settings',
+      path: '/settings',
+      icon: <IoIcons.IoMdHelpCircle />
+    }
+  ];
 
   return (
     <>
@@ -60,8 +126,30 @@ const Sidebar = () => {
             <NavIcon to='#'>
               <AiIcons.AiOutlineClose onClick={showSidebar} />
             </NavIcon>
-            {SidebarData.map((item, index) => {
-              return <SubMenu item={item} key={index} />;
+            {hardcodedSidebarData.map((item, index) => {
+              return (
+                <>
+                <SidebarLink 
+                  to={item.path} 
+                  onClick={() => {
+                    showSidebar(); // Close the sidebar
+                    item.subNav && showSubnav(); // Toggle subnav if it exists
+                  }}>
+                    <div>
+                      {item.icon}
+                      <SidebarLabel>{item.title}</SidebarLabel>
+                    </div>
+                    <div>
+                      {item.subNav && subnav
+                        ? item.iconOpened
+                        : item.subNav
+                        ? item.iconClosed
+                        : null}
+                    </div>
+                </SidebarLink>
+
+                </>
+              );
             })}
           </SidebarWrap>
         </SidebarNav>
