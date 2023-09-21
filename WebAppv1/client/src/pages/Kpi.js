@@ -13,6 +13,7 @@ import * as IoIcons from 'react-icons/io';
 import { useGetData } from '../hooks/useGetData';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { Line, CartesianGrid, Scatter, LineChart, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { List } from '@mui/material';
 
 function Kpi() {
   const [indicator, setIndicator] = useState(null)
@@ -25,6 +26,54 @@ function Kpi() {
   const [chartKey, setChartKey] = useState(0);
   const [resampleRate, setResampleRate] = useState('day');
   const [predictionMade, setPredictionMade] = useState(false);
+  const [multichart, setMultiChart] = useState()
+
+
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  function transformData(data) {
+    // Create a map to store combined data
+    const combinedDataMap = new Map();
+
+
+    // Loop through each dataset
+    data.forEach((dataset, idx) => {
+        dataset.forEach((element, ind)=>{
+          element.forEach((point, inder)=>{
+            const date = point.issue_date;
+            const value = point.value;
+            
+            // Check if this date is already in the map
+            if (!combinedDataMap.has(date)) {
+                combinedDataMap.set(date, { issue_date: date });
+            }
+            
+            // Add the value to the right property (e.g., value1, value2)
+            combinedDataMap.get(date)[`value${idx + 1}`] = value;
+          })
+        })
+    });
+    
+
+    const result = [...combinedDataMap.values()];
+
+    // Fill in missing values with 0
+    result.forEach(item => {
+        for (let i = 1; i <= data.length; i++) {
+            if (!item.hasOwnProperty(`value${i}`)) {
+                item[`value${i}`] = 0;
+            }
+        }
+    });
+    return result;
+}
 
   const getPrediction = async() =>{
     try{
@@ -37,32 +86,36 @@ function Kpi() {
         body: JSON.stringify({ user_input: chartData }),
       });
       const data = await response.json();
-      console.log(data)
-      // Determine the next month's date
-    const latestDate = chartData.reduce((latest, curr) => {
+      console.log(chartData)
+    const latestDate = chartData[0][0].reduce((latest, curr) => {
       const currDate = new Date(curr.issue_date);
+      
       return currDate > latest ? currDate : latest;
-    }, new Date(chartData[0].issue_date));
+    }, new Date(chartData[0][0][0].issue_date));
     const nextMonthDate = dayjs(latestDate).add(1, 'month').format('MM-DD-YYYY'); 
 
     // Add ARIMA prediction
     const arimaDataPoint = {
-      issue_date: nextMonthDate,  
-      value: data.arima[0],
-      type: 'prediction'
-    };
-    
-    // Add LSTM prediction
-    const lstmDataPoint = {
-      issue_date: nextMonthDate, 
-      value: data.lstm,
-      type: 'prediction'
+        issue_date: nextMonthDate,
+        value: data.arima[0],
+        type: 'prediction'
     };
 
-    // Append new prediction points to chartData
-    setChartData(prevData => [...prevData, arimaDataPoint, lstmDataPoint]);
+    // Add LSTM prediction
+    const lstmDataPoint = {
+        issue_date: nextMonthDate,
+        value: data.lstm,
+        type: 'prediction'
+    };
+
+    // Append new prediction points to chartData[0]
+    console.log(chartData);
+
+    setChartData(prevData => [[[...prevData[0][0], arimaDataPoint, lstmDataPoint]]]);
+    console.log(arimaDataPoint);
+    console.log(lstmDataPoint);
+    console.log(chartData);
     setPredictionMade(true);
-      // Prediction Data
     }catch (error) {
       console.error('Error:', error);
     }
@@ -110,11 +163,15 @@ function Kpi() {
               value: averageValue,
             };
           });
-          setChartData(monthlyData);
+          setChartData(prevData => [...prevData, [monthlyData]])
         } else {
-          setChartData(formattedData);
+          setChartData(prevData => [...prevData, [formattedData]])
         }
-      
+        if(chartData.length > 1){
+          
+          console.log(transformData(chartData))
+          setMultiChart(transformData(chartData))
+        }
         setChartKey((prevKey) => prevKey + 1);
       }catch (error) {
         console.error('Error:', error);
@@ -122,6 +179,11 @@ function Kpi() {
     }
   }
 
+  useEffect(() => {
+    if(chartData){
+      console.log(chartData)
+    }
+  }, [chartData])
   
 
   return (
@@ -220,7 +282,7 @@ function Kpi() {
       </div>
       </button>
       
-      {chartData.length > 0 && (
+      {chartData.length > 0 && chartData.length <2 && (
         <button onClick={getPrediction} style={{background:"none", border:"none"}}>
       <div style={{width:"100px", height:"50px", borderRadius:"20px", backgroundColor:"#8884D8",
       display:"flex", justifyContent:"center", alignContent:"center", alignItems:"center", color:"white"
@@ -237,9 +299,28 @@ function Kpi() {
       display:"flex", alignItems:"center", alignContent:"center", justifyContent:"center",
       borderRadius:"50px"
       }}>
-        { chartData.length > 0 && (
+         {multichart ? (
           <ResponsiveContainer width="90%" height="90%">
-          <LineChart key={chartKey} data={chartData}>
+            <LineChart key={chartKey} data={multichart}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="issue_date" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              {Array.from({ length: chartData.length }).map((_, index) => (
+                <Line 
+                  key={index}
+                  type="monotone" 
+                  dataKey={`value${index + 1}`} 
+                  stroke={getRandomColor()} 
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
+  ) : (
+    chartData.length && (
+      <ResponsiveContainer width="90%" height="90%">
+          <LineChart key={chartKey} data={chartData[0][0]}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="issue_date" />
             <YAxis />
@@ -248,8 +329,8 @@ function Kpi() {
             <Line type="monotone" dataKey="value" stroke="#8884d8" />
           </LineChart>
         </ResponsiveContainer>
-
-        )}
+    )
+  )}
       </div>
       
 

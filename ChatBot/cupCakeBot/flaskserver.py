@@ -220,7 +220,7 @@ def financeQuery():
 @app.route('/api/predict', methods=['POST'])
 def predictor():
     user_input = request.json.get('user_input', '')
-    df = pd.DataFrame(user_input)
+    df = pd.DataFrame(user_input[0][0])
     df['issue_date'] = pd.to_datetime(df['issue_date'])
     time_series = df.resample('M', on='issue_date').sum()['value']
     
