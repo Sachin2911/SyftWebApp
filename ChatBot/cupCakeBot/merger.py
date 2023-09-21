@@ -54,7 +54,11 @@ merger.fillna(0, inplace=True)
 
 merger["revenue"] = merger["quantity"]*merger["sale_unit_price"]
 merger["expense"] = merger["quantity"]*merger["purchase_unit_price"]
-merger["profit"] = merger["revenue"] - merger["expense"]
 merger.drop("code", inplace=True, axis=1)
 
-merger.to_csv("./merged.csv")
+merger.loc[(merger['revenue'] == 0) & (merger['is_sale'] == True), 'revenue'] = merger['total']
+merger.loc[(merger['expense'] == 0) & (merger['is_sale'] == False), 'revenue'] = merger['total']
+merger["profit"] = merger["revenue"] - merger["expense"]
+
+
+merger.to_csv("./data/merged.csv")
