@@ -208,7 +208,8 @@ def financeQuery():
     filtered_df = merged2[merged2["issue_date"]>=query_destruct[2]]
     #filtering before enddate
     filtered_df = filtered_df[merged2["issue_date"]<=query_destruct[3]]
-    filtered_df = filtered_df[merged2["item_code"]==query_destruct[1]]
+    if(query_destruct[1]!="all"):
+        filtered_df = filtered_df[merged2["item_code"]==query_destruct[1]]
     #get the column 
     print(filtered_df.columns)
     result_df = filtered_df[["issue_date", query_destruct[0]]].sort_values(by='issue_date', ascending=True)

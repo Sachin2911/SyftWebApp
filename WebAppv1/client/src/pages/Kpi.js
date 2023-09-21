@@ -157,7 +157,8 @@ function Kpi() {
           onChange={(event) =>{
             setProduct(event.target.value)
           }}
-        >
+        > 
+          <MenuItem value={"all"}>All</MenuItem>
           {contacts ? (
             contacts.map((contact, index) => (
               <MenuItem key={index} value={contact.code}>
