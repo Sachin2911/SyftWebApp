@@ -20,7 +20,7 @@ const dataPullAll = async (req, res) => {
     for (const element of elements) {
       await dataPullElementUtility(element);
     }
-    res.status(200).send(`All have been updated`);
+    res.status(200).json({response:"All have been updated!!"});
   } catch (error) {
     console.log("An error occurred:", error);
     res.status(500).send(`An error occurred ${error}`);

@@ -272,7 +272,7 @@ function Kpi() {
         </Select>
       </FormControl>
 
-
+      <div style={{width:"10px"}}></div>
       <div style={{width:"10px"}}></div>
       <button onClick={getGraph} style={{background:"none", border:"none"}}>
       <div style={{width:"50px", height:"50px", borderRadius:"50px", backgroundColor:"#00A36C",
@@ -318,7 +318,7 @@ function Kpi() {
             </LineChart>
           </ResponsiveContainer>
   ) : (
-    chartData.length && (
+    !!chartData.length && (
       <ResponsiveContainer width="90%" height="90%">
           <LineChart key={chartKey} data={chartData[0][0]}>
             <CartesianGrid strokeDasharray="3 3" />
