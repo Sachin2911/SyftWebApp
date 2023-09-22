@@ -120,3 +120,58 @@ form.signup, form.login {
   flex-direction: row;
   justify-content: space-around;
 }
+
+@keyframes scrollCarousel {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100vw); }
+}
+
+.alerts-table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.alerts-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.alerts-table th, .alerts-table td {
+  padding: 12px 20px;
+  text-align: left;
+}
+
+.alerts-table thead {
+  background-color: #31D6AD;
+  color: white;
+}
+
+.alerts-table tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.alerts-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.alerts-table tbody tr:hover {
+  background-color: rgba(49, 214, 173, 0.1);
+}
+
+.alerts-table button {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.alerts-table button:hover {
+  background-color: #e63939;
+}
+
+

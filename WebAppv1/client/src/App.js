@@ -7,8 +7,9 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Navbar from './components/Navbar'
 import Kpi from './pages/Kpi'
-import Inventory from './pages/Inventory'
 import Settings from './pages/Settings'
+import Management from './pages/Management';
+import Analytics from './pages/Analytics'
 
 function App() {
   const { user } = useAuthContext()
@@ -32,12 +33,16 @@ function App() {
               element={!user ? <Signup />: <Navigate to="/"/>} 
             />
              <Route 
-              path="/kpi"
+              path="/prediction"
               element={user ? <Kpi />:<Navigate to="/login"/>}
             />
             <Route 
+              path="/analytics"
+              element={user ? <Analytics />:<Navigate to="/login"/>}
+            />
+            <Route 
               path="/inventory"
-              element={user ? <Inventory />:<Navigate to="/login"/>}
+              element={user ? <Management />:<Navigate to="/login"/>}
             />
             <Route 
               path="/settings"

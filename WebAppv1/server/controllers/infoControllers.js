@@ -3,13 +3,15 @@ const Invoice = require('../models/InvoiceSchema')
 const axios = require('axios');
 const Item = require('../models/ItemSchema')
 const Payment = require('../models/PaymentSchema')
+const Alert = require('../models/AlertSchema')
 const mongoose = require("mongoose")
 
 const schemaDict = {
     'contacts':Contact,
     'invoice':Invoice,
     'item':Item,
-    'payment':Payment
+    'payment':Payment,
+    'alert':Alert
   }
 
 const infoElement = async (req, res) =>{

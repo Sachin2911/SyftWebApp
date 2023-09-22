@@ -97,11 +97,16 @@ const Sidebar = () => {
       iconOpened: <RiIcons.RiArrowUpSFill />,
     },
     {
-      title: 'Analytics and KPIs',
-      path: '/kpi',
+      title: 'Prediction & Comparitive Analysis',
+      path: '/prediction',
       icon: <IoIcons.IoIosPaper />,
       iconClosed: <RiIcons.RiArrowDownSFill />,
       iconOpened: <RiIcons.RiArrowUpSFill />,
+    },
+    {
+      title: 'Analytics and KPIs',
+      path: '/analytics',
+      icon: <FaIcons.FaChartLine />
     },
     {
       title: 'Inventory',
