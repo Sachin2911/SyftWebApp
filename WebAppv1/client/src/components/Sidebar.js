@@ -98,19 +98,19 @@ const Sidebar = () => {
     },
     {
       title: 'Prediction & Comparitive Analysis',
-      path: '/kpi',
+      path: '/prediction',
       icon: <IoIcons.IoIosPaper />,
       iconClosed: <RiIcons.RiArrowDownSFill />,
       iconOpened: <RiIcons.RiArrowUpSFill />,
     },
     {
       title: 'Analytics and KPIs',
-      path: '/inventory',
+      path: '/analytics',
       icon: <FaIcons.FaChartLine />
     },
     {
-      title: 'Data Management',
-      path: '/management',
+      title: 'Inventory',
+      path: '/inventory',
       icon: <FaIcons.FaCartPlus />
     },
     {

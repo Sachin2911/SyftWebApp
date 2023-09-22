@@ -20,6 +20,7 @@ from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense, LSTM
 import numpy as np
+import statsmodels.api as sm
 
 # Initialize the WordNetLemmatizer and PorterStemmer
 wnl = WordNetLemmatizer()
@@ -51,6 +52,50 @@ net = tflearn.regression(net)
 
 model = tflearn.DNN(net)
 model.load("./botData/model.tflearn")
+
+def adjusted_stl_decomposition_for_item_data(item_code, data):
+    # Filter data for the given item_code
+    item_data = data[data['item_code'] == item_code]
+    
+    # Ensure 'issue_date' column is in datetime format
+    item_data['issue_date'] = pd.to_datetime(item_data['issue_date'])
+    
+    # Aggregate data (assuming monthly for simplicity)
+    aggregated_data = item_data.groupby(item_data['issue_date'].dt.to_period("M")).agg({
+        'revenue': 'sum'
+    }).reset_index()
+    
+    # Convert period back to datetime for STL
+    aggregated_data['issue_date'] = aggregated_data['issue_date'].dt.to_timestamp()
+    
+    # Adjust the period based on available data
+    available_data_points = len(aggregated_data)
+    if available_data_points < 24:
+        period = available_data_points // 2
+    else:
+        period = 12
+    
+    # Perform STL decomposition
+    result = sm.tsa.seasonal_decompose(aggregated_data['revenue'], model='additive', period=period, extrapolate_trend='freq')
+    seasonal_revenue = result.seasonal
+    
+    peak_month = aggregated_data['issue_date'][seasonal_revenue.idxmax()].month_name()
+    trough_month = aggregated_data['issue_date'][seasonal_revenue.idxmin()].month_name()
+    
+    # Prepare data for JSON
+    output = {
+        "item_code": item_code,
+        "dates": aggregated_data['issue_date'].dt.strftime('%Y-%m-%d').tolist(),
+        "observed": aggregated_data['revenue'].tolist(),
+        "trend": result.trend.tolist(),
+        "seasonal": result.seasonal.tolist(),
+        "residual": result.resid.tolist(),
+        "peak_revenue_month":peak_month,
+        "trough_revenue_month":trough_month
+    }
+    
+    
+    return output
 
 def LSTM_forecast(time_series_data):
     # Normalize the data
@@ -237,7 +282,19 @@ def predictor():
     }
 
     return jsonify(output)
+
+@app.route('/api/decomposition', methods=['POST'])  
+def st_decomp():
+    user_input = request.json.get('user_input', '')
+    unique_item_codes = merged2['item_code'].unique()
+    unique_item_codes_list = unique_item_codes.tolist()
+    unique_item_codes_list.remove('0')
+    unique_item_codes_list_updated = np.array(unique_item_codes_list)
     
+    data_cleaned = merged2[merged2['issue_date'] != "0"]
+    data_cleaned['issue_date'] = pd.to_datetime(data_cleaned['issue_date'])
+    
+    return jsonify({"response": adjusted_stl_decomposition_for_item_data(user_input, data_cleaned)})
 
 @app.route('/api/cupcakebot/analytics', methods=['POST'])
 def cupcakebotanalytics():

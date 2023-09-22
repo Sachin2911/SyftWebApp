@@ -11,10 +11,12 @@ const Settings = () =>{
 
   return (
     <div className='settings-wrapper' style={{
-      display:"flex", alignContent:"center", alignItems:"center", justifyContent:"center"
+      display:"flex", alignContent:"center", alignItems:"flex-start", justifyContent:"center",
+      height:"100vh"
     }}>
     <div className='settingsContainer' style={{
-      width:"40vw", height:"70vh", backgroundColor:"white", margin:"30px", borderRadius:"30px"
+      width:"40vw", backgroundColor:"white", margin:"30px", borderRadius:"30px",
+      boxShadow: "0.15rem 0.2rem 0.15rem 0.1rem rgba(0, 0, 0, 0.1)"
     }}>
     <div className='settingsContent' style={{padding:"30px"}}>
       <h2>Settings</h2>

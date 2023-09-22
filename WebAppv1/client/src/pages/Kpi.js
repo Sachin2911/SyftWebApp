@@ -297,7 +297,7 @@ function Kpi() {
       
       <div className='chart' style={{height: "84%", width: "90%", backgroundColor:"white",
       display:"flex", alignItems:"center", alignContent:"center", justifyContent:"center",
-      borderRadius:"50px"
+      borderRadius:"50px", boxShadow: "0.15rem 0.2rem 0.15rem 0.1rem rgba(0, 0, 0, 0.1)"
       }}>
          {multichart ? (
           <ResponsiveContainer width="90%" height="90%">
